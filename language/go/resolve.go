@@ -228,6 +228,11 @@ func resolveWithIndexGo(ix *resolve.RuleIndex, imp string, from label.Label) (la
 		} else {
 			// Match is ambiguous
 			matchError = fmt.Errorf("multiple rules (%s and %s) may be imported with %q from %s", bestMatch.Label, m.Label, imp, from)
+			matchError = fmt.Errorf(`code in build rule %s contains import %q which matches multiple rules: %s and %s
+Use # gazelle:resolve to disambiguate with one of the following:
+	# gazelle:resolve go %[2]s %[3]s
+	# gazelle:resolve go %[2]s %[4]s
+`, from, imp, bestMatch.Label, m.Label)
 		}
 	}
 	if matchError != nil {
